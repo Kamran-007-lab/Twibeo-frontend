@@ -39,7 +39,7 @@ function App() {
               <Route exact path="/GetVideo/:videoId" element={<GetVideo />} />
               <Route
                 exact
-                path="/MySubscriptions"
+                path="/MySubscriptions/:id"
                 element={<MySubscriptions />}
               />
               <Route exact path="/Playlist" element={<Playlist />} />

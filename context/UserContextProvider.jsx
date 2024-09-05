@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import UserContext from "./UserContext";
 import { useNavigate } from "react-router-dom";
 const UserContextProvider = ({ children }) => {
     let navigate = useNavigate();
-    const[currentUser,setCurrentUser]=useState({});
+    const[currentUser,setCurrentUser]=useState();
+    const[subscribers,setSubscribers]=useState([]);
+    const[subscriptions,setSubscriptions]=useState([]);
+    
     function errormessage(message) {
         let dropdown = document.getElementById("errormessage");
         dropdown.innerHTML = message;
@@ -35,6 +38,66 @@ const UserContextProvider = ({ children }) => {
 
 
 
+      const getSubscribers= async(channelId) => {
+        const response = await fetch(`http://localhost:8000/api/v1/subscriptions/c/${channelId}`, {
+          // mode: 'no-cors',
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+        });
+        if (!response.ok) {
+          // Handle error response
+          console.log(response)
+          const errorText = await response.text();
+          console.error("Error response:", errorText);
+          errormessage("Failed to get current user");
+          return;
+        }
+        
+        const json=await response.json();
+        if(json.success){
+          console.log("hello xyz user",json);
+          // navigate("/");
+          setSubscribers(json.data)
+        }
+        else{
+          console.log("errrrrrr")
+          errormessage(json.error);
+        }
+      }
+
+      const getSubscriptions= async(subscriberId) => {
+        const response = await fetch(`http://localhost:8000/api/v1/subscriptions/u/${subscriberId}`, {
+          // mode: 'no-cors',
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+        });
+        if (!response.ok) {
+          // Handle error response
+          console.log(response)
+          const errorText = await response.text();
+          console.error("Error response:", errorText);
+          errormessage("Failed to get current user");
+          return;
+        }
+        
+        const json=await response.json();
+        if(json.success){
+          console.log("hello xyz user",json);
+          // navigate("/");
+          setSubscriptions(json.data)
+        }
+        else{
+          console.log("errrrrrr")
+          errormessage(json.error);
+        }
+      }
+
 
     const getCurrentUser= async() => {
       const response = await fetch("http://localhost:8000/api/v1/users/current-user", {
@@ -56,9 +119,10 @@ const UserContextProvider = ({ children }) => {
       
       const json=await response.json();
       if(json.success){
-        console.log("hello xyz user",json);
+        console.log("hello xyz user is currently logged in",json);
         // navigate("/");
         setCurrentUser(json.data)
+        // console.log(currentUser)
       }
       else{
         console.log("errrrrrr")
@@ -66,6 +130,11 @@ const UserContextProvider = ({ children }) => {
       }
     }
     
+    useEffect(() => {
+      getCurrentUser();
+    }, []);
+
+
     const handleLogout =async() => {
         const response = await fetch("http://localhost:8000/api/v1/users/logout", {
           // mode: 'no-cors',
@@ -97,7 +166,7 @@ const UserContextProvider = ({ children }) => {
       }
   
     return (
-      <UserContext.Provider value={{ handleLogout, getCurrentUser, timeAgo, errormessage }}>
+      <UserContext.Provider value={{ handleLogout,currentUser, getCurrentUser, timeAgo, errormessage,subscribers,setSubscribers,subscriptions,setSubscriptions,getSubscribers,getSubscriptions }}>
         {children}
       </UserContext.Provider>
     );

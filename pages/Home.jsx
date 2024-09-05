@@ -24,6 +24,13 @@ const Home = () => {
   }, []);
 
 
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     console.log("Current User checking:", currentUser); // Check the state here
+  //   }
+  // }, [currentUser]);
+
+  console.log(currentUser)
   let navigate = useNavigate();
 
   function errormessage(message) {
@@ -134,7 +141,7 @@ const Home = () => {
             </Link>
           </li>
           <li className="cursor-pointer p-2 hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white rounded-lg">
-            <Link to="/MySubscriptions" className="flex items-center space-x-2">
+            <Link to="" className="flex items-center space-x-2">
               <SubscriptionsIcon className="text-xl" />
               <span>Subscriptions</span>
             </Link>

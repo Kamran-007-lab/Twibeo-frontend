@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -12,10 +12,14 @@ import HistoryIcon from "@mui/icons-material/History";
 import UserContext from "../context/UserContext";
 import LogoutIcon from '@mui/icons-material/Logout';
 
+
 const SubscriptionsPage = () => {
+
+  const {id} = useParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("subscribers");
-  const {handleLogout}=useContext(UserContext)
+  const {handleLogout,subscribers,subscriptions,setSubscribers,setSubscriptions,getSubscribers,getSubscriptions}=useContext(UserContext)
+  
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -24,6 +28,10 @@ const SubscriptionsPage = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "subscribers":
+        useEffect(() => {
+          getSubscribers(id);
+          // getCurrentUser();
+        }, []);
         return (
           <div className="flex flex-wrap gap-4 justify-center">
             {Array(6)
@@ -41,6 +49,10 @@ const SubscriptionsPage = () => {
           </div>
         );
       case "subscriptions":
+        useEffect(() => {
+          getSubscriptions(id);
+          // getCurrentUser();
+        }, []);
         return (
           <div className="flex flex-wrap gap-6 justify-center">
             {Array(4)

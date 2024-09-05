@@ -18,7 +18,7 @@ const VideoContextProvider = ({ children }) => {
     if (json.success) {
       console.log(json.data.videos);
       setVideo(json.data.videos);
-      console.log(video);
+      // console.log(video);
     } else {
     }
   };
