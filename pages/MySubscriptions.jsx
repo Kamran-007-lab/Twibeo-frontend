@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
@@ -21,6 +21,19 @@ const SubscriptionsPage = () => {
   const {handleLogout,subscribers,subscriptions,setSubscribers,setSubscriptions,getSubscribers,getSubscriptions}=useContext(UserContext)
   
 
+  useEffect(() => {
+    if (activeTab === "subscribers") {
+      getSubscribers(id);
+      console.log("Subscribers", subscribers);
+    } else if (activeTab === "subscriptions") {
+      getSubscriptions(id);
+      console.log("Subscriptions", subscriptions);
+    }
+  }, [activeTab]);
+
+
+
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -28,10 +41,6 @@ const SubscriptionsPage = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "subscribers":
-        useEffect(() => {
-          getSubscribers(id);
-          // getCurrentUser();
-        }, []);
         return (
           <div className="flex flex-wrap gap-4 justify-center">
             {Array(6)
@@ -49,14 +58,9 @@ const SubscriptionsPage = () => {
           </div>
         );
       case "subscriptions":
-        useEffect(() => {
-          getSubscriptions(id);
-          // getCurrentUser();
-        }, []);
         return (
           <div className="flex flex-wrap gap-6 justify-center">
-            {Array(4)
-              .fill("")
+            {subscriptions
               .map((_, index) => (
                 <div key={index} className="w-72 bg-gray-200 h-auto rounded-3xl my-3 flex items-center cursor-pointer">
                   <img

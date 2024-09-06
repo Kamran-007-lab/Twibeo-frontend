@@ -22,7 +22,7 @@ const GetVideo = () => {
   const [currentComment, setCurrentComment] = useState("");
   const { video, playVideo, handleVideo, vid, setVid, getVideo } =
     useContext(VideoContext);
-  const { handleLogout, timeAgo, errormessage } = useContext(UserContext);
+  const { handleLogout, timeAgo, errormessage,subscribeStatus,toggleSubscription } = useContext(UserContext);
   const [counter, setCounter] = useState(0);
 
   useEffect(() => {
@@ -241,8 +241,8 @@ const GetVideo = () => {
                 <button className="hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white bg-white text-black font-bold py-2 px-4 rounded-lg">
                   Like
                 </button>
-                <button className="hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white bg-white text-black font-bold py-2 px-4 rounded-lg">
-                  Subscribe
+                <button id="subscribe" onClick={() => toggleSubscription(playVideo.owner._id)} className="hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white bg-white text-black font-bold py-2 px-4 rounded-lg">
+                {subscribeStatus===false ?"Subscribe":"Unsubscribe"}
                 </button>
                 <button className="hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white bg-white text-black font-bold py-2 px-4 rounded-lg">
                   Add to playlist

@@ -141,7 +141,7 @@ const Home = () => {
             </Link>
           </li>
           <li className="cursor-pointer p-2 hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white rounded-lg">
-            <Link to="" className="flex items-center space-x-2">
+            <Link to={`/MySubscriptions/${currentUser._id}`} className="flex items-center space-x-2">
               <SubscriptionsIcon className="text-xl" />
               <span>Subscriptions</span>
             </Link>

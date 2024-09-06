@@ -3,6 +3,7 @@ import UserContext from "./UserContext";
 import { useNavigate } from "react-router-dom";
 const UserContextProvider = ({ children }) => {
     let navigate = useNavigate();
+    const[subscribeStatus,setSubscribeStatus]=useState(false);
     const[currentUser,setCurrentUser]=useState();
     const[subscribers,setSubscribers]=useState([]);
     const[subscriptions,setSubscriptions]=useState([]);
@@ -11,6 +12,36 @@ const UserContextProvider = ({ children }) => {
         let dropdown = document.getElementById("errormessage");
         dropdown.innerHTML = message;
         dropdown.classList.toggle("hidden");
+      }
+
+      const toggleSubscription= async(channelId) => {
+        const response = await fetch(`http://localhost:8000/api/v1/subscriptions/c/${channelId}`, {
+          // mode: 'no-cors',
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+        });
+        if (!response.ok) {
+          // Handle error response
+          console.log(response)
+          const errorText = await response.text();
+          console.error("Error response:", errorText);
+          errormessage("Failed to get current user");
+          return;
+        }
+        
+        const json=await response.json();
+        if(json.success){
+          console.log("hello xyz user",json);
+          // navigate("/");
+          setSubscribeStatus((prevStatus) => !prevStatus)
+        }
+        else{
+          console.log("errrrrrr")
+          errormessage(json.error);
+        }
       }
 
       const timeAgo = (date) => {
@@ -35,11 +66,8 @@ const UserContextProvider = ({ children }) => {
           return `Just now`;
         }
       };
-
-
-
       const getSubscribers= async(channelId) => {
-        const response = await fetch(`http://localhost:8000/api/v1/subscriptions/c/${channelId}`, {
+        const response = await fetch(`http://localhost:8000/api/v1/subscriptions/u/${channelId}`, {
           // mode: 'no-cors',
           method: "GET",
           headers: {
@@ -58,7 +86,7 @@ const UserContextProvider = ({ children }) => {
         
         const json=await response.json();
         if(json.success){
-          console.log("hello xyz user",json);
+          console.log("hello this is get subscriber",json);
           // navigate("/");
           setSubscribers(json.data)
         }
@@ -67,9 +95,8 @@ const UserContextProvider = ({ children }) => {
           errormessage(json.error);
         }
       }
-
       const getSubscriptions= async(subscriberId) => {
-        const response = await fetch(`http://localhost:8000/api/v1/subscriptions/u/${subscriberId}`, {
+        const response = await fetch(`http://localhost:8000/api/v1/subscriptions/c/${subscriberId}`, {
           // mode: 'no-cors',
           method: "GET",
           headers: {
@@ -82,23 +109,21 @@ const UserContextProvider = ({ children }) => {
           console.log(response)
           const errorText = await response.text();
           console.error("Error response:", errorText);
-          errormessage("Failed to get current user");
+          errormessage("Failed to get subscription value");
           return;
         }
         
         const json=await response.json();
         if(json.success){
-          console.log("hello xyz user",json);
+          console.log("hello this is get subscriptions",json);
           // navigate("/");
           setSubscriptions(json.data)
         }
         else{
-          console.log("errrrrrr")
+          console.log("errrrrrr in getting json from subscription")
           errormessage(json.error);
         }
       }
-
-
     const getCurrentUser= async() => {
       const response = await fetch("http://localhost:8000/api/v1/users/current-user", {
         // mode: 'no-cors',
@@ -134,7 +159,6 @@ const UserContextProvider = ({ children }) => {
       getCurrentUser();
     }, []);
 
-
     const handleLogout =async() => {
         const response = await fetch("http://localhost:8000/api/v1/users/logout", {
           // mode: 'no-cors',
@@ -166,7 +190,7 @@ const UserContextProvider = ({ children }) => {
       }
   
     return (
-      <UserContext.Provider value={{ handleLogout,currentUser, getCurrentUser, timeAgo, errormessage,subscribers,setSubscribers,subscriptions,setSubscriptions,getSubscribers,getSubscriptions }}>
+      <UserContext.Provider value={{ handleLogout,currentUser, getCurrentUser, timeAgo, errormessage,subscribers,setSubscribers,subscriptions,setSubscriptions,getSubscribers,getSubscriptions,subscribeStatus,setSubscribeStatus,toggleSubscription }}>
         {children}
       </UserContext.Provider>
     );
