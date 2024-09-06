@@ -20,8 +20,12 @@ const Home = () => {
   const{currentUser,getCurrentUser}=useContext(UserContext)
   useEffect(() => {
     getVideo();
-    getCurrentUser();
+    // getCurrentUser();
   }, []);
+
+  useEffect(()=>{
+    getCurrentUser();
+  },[]);
 
 
   // useEffect(() => {
@@ -141,7 +145,7 @@ const Home = () => {
             </Link>
           </li>
           <li className="cursor-pointer p-2 hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white rounded-lg">
-            <Link to={`/MySubscriptions/${currentUser._id}`} className="flex items-center space-x-2">
+            <Link to={`/MySubscriptions/${currentUser?._id}`} className="flex items-center space-x-2">
               <SubscriptionsIcon className="text-xl" />
               <span>Subscriptions</span>
             </Link>
@@ -185,7 +189,9 @@ const Home = () => {
             </div>
             <div className="flex items-center space-x-4 mr-4">
             <NotificationsIcon fontSize="large" className="text-3xl cursor-pointer" />
+            <Link to={`/Profile/${currentUser?._id}`} >
             <AccountCircleIcon fontSize="large" className="text-3xl cursor-pointer" />
+            </Link>
           </div>
         </div>
 
@@ -201,7 +207,7 @@ const Home = () => {
                 <h2 className="font-semibold text-lg mb-2">
                 {video.title}</h2>
                 <div className='flex flex-row gap-2 items-center'>
-                <img src="https://images.pexels.com/photos/147411/italy-mountains-dawn-daybreak-147411.jpeg?auto=compress&cs=tinysrgb&w=600" alt="avatar" className='rounded-full w-6 h-6' />
+                <img src={video.owner.avatar} alt="avatar" className='rounded-full w-6 h-6' />
                 <span className="text-sm text-gray-500">{video.owner.username}</span>
                 </div>
                 

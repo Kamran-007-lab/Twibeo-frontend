@@ -155,9 +155,9 @@ const UserContextProvider = ({ children }) => {
       }
     }
     
-    useEffect(() => {
-      getCurrentUser();
-    }, []);
+    // useEffect(() => {
+    //   getCurrentUser();
+    // }, []);
 
     const handleLogout =async() => {
         const response = await fetch("http://localhost:8000/api/v1/users/logout", {

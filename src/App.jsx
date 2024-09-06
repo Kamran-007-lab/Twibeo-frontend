@@ -45,7 +45,7 @@ function App() {
               <Route exact path="/Playlist" element={<Playlist />} />
               <Route exact path="/Home" element={<Home />} />
               {/* <Route exact path="/MyProfile" element={<MyProfile />} /> */}
-              <Route exact path="/Profile/:id" element={<Profile />} />
+              <Route exact path="/Profile/:userId" element={<Profile />} />
               <Route exact path="/WatchHistory" element={<WatchHistory />} />
             </Routes>
           </VideoContextProvider>
