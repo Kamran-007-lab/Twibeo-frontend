@@ -22,12 +22,12 @@ const GetVideo = () => {
   const [currentComment, setCurrentComment] = useState("");
   const { video, playVideo, handleVideo, vid, setVid, getVideo } =
     useContext(VideoContext);
-  const { handleLogout, timeAgo, errormessage,subscribeStatus,toggleSubscription } = useContext(UserContext);
+  const { handleLogout, timeAgo, errormessage,subscribeStatus,toggleSubscription,currentUser,getCurrentUser } = useContext(UserContext);
   const [counter, setCounter] = useState(0);
 
   useEffect(() => {
     getVideo();
-    // getCurrentUser();
+    getCurrentUser();
   }, []);
 
   useEffect(() => {
@@ -164,7 +164,7 @@ const GetVideo = () => {
             </Link>
           </li>
           <li className="cursor-pointer p-2 hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white rounded-lg">
-            <Link to="/MySubscriptions" className="flex items-center space-x-2">
+            <Link to={`/MySubscriptions/${currentUser._id}`} className="flex items-center space-x-2">
               <SubscriptionsIcon className="text-xl" />
               <span>Subscriptions</span>
             </Link>

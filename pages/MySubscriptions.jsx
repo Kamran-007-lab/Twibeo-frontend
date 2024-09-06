@@ -18,7 +18,7 @@ const SubscriptionsPage = () => {
   const {id} = useParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("subscribers");
-  const {handleLogout,subscribers,subscriptions,setSubscribers,setSubscriptions,getSubscribers,getSubscriptions}=useContext(UserContext)
+  const {handleLogout,subscribers,subscriptions,setSubscribers,setSubscriptions,getSubscribers,getSubscriptions,getCurrentUser,currentUser}=useContext(UserContext)
   
 
   useEffect(() => {
@@ -30,6 +30,10 @@ const SubscriptionsPage = () => {
       console.log("Subscriptions", subscriptions);
     }
   }, [activeTab]);
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
 
 
 
@@ -43,16 +47,15 @@ const SubscriptionsPage = () => {
       case "subscribers":
         return (
           <div className="flex flex-wrap gap-4 justify-center">
-            {Array(6)
-              .fill("")
-              .map((_, index) => (
+            {subscribers
+              .map(( sub,index) => (
                 <div key={index} className="w-72 bg-gray-200 h-auto rounded-3xl my-3 flex items-center cursor-pointer">
                   <img
-                    src={`https://randomuser.me/api/portraits/thumb/men/${index + 1}.jpg`}
+                    src={sub.subscriber.avatar}
                     alt={`Subscriber ${index + 1}`}
                     className="w-10 h-10 rounded-full ml-4"
                   />
-                  <p className="text-lg ml-4">Subscriber {index + 1}</p>
+                  <p className="text-lg ml-4">{sub.subscriber.username}</p>
                 </div>
               ))}
           </div>
@@ -61,14 +64,14 @@ const SubscriptionsPage = () => {
         return (
           <div className="flex flex-wrap gap-6 justify-center">
             {subscriptions
-              .map((_, index) => (
+              .map((ch,index) => (
                 <div key={index} className="w-72 bg-gray-200 h-auto rounded-3xl my-3 flex items-center cursor-pointer">
                   <img
-                    src={`https://randomuser.me/api/portraits/thumb/women/${index + 1}.jpg`}
+                    src={ch.channel.avatar}
                     alt={`Channel ${index + 1}`}
                     className="w-10 h-10 rounded-full ml-4"
                   />
-                  <p className="text-lg ml-4">Channel {index + 1}</p>
+                  <p className="text-lg ml-4">{ch.channel.username}</p>
                 </div>
               ))}
           </div>
@@ -94,7 +97,7 @@ const SubscriptionsPage = () => {
             </Link>
           </li>
           <li className="cursor-pointer p-2 hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white rounded-lg">
-            <Link to="/MySubscriptions" className="flex items-center space-x-2">
+            <Link to={`/MySubscriptions/${id}`} className="flex items-center space-x-2">
               <SubscriptionsIcon className="text-xl" />
               <span>Subscriptions</span>
             </Link>

@@ -1,4 +1,4 @@
-import React, { useState,useContext } from "react";
+import React, { useState,useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
@@ -17,7 +17,10 @@ import LogoutIcon from '@mui/icons-material/Logout';
 const Profile = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("videos");
-  const {handleLogout}=useContext(UserContext)
+  const {handleLogout,getCurrentUser,currentUser}=useContext(UserContext)
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -78,7 +81,7 @@ const Profile = () => {
             </Link>
           </li>
           <li className="cursor-pointer p-2 hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white rounded-lg">
-            <Link to="/MySubscriptions" className="flex items-center space-x-2">
+            <Link to={`/MySubscriptions/${currentUser._id}`} className="flex items-center space-x-2">
               <SubscriptionsIcon className="text-xl" />
               <span>Subscriptions</span>
             </Link>
