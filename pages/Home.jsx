@@ -190,7 +190,8 @@ const Home = () => {
             <div className="flex items-center space-x-4 mr-4">
             <NotificationsIcon fontSize="large" className="text-3xl cursor-pointer" />
             <Link to={`/Profile/${currentUser?._id}`} >
-            <AccountCircleIcon fontSize="large" className="text-3xl cursor-pointer" />
+            <img src={currentUser?.avatar} className='h-10 w-10 rounded-full cursor-pointer hover:scale-110 border-b-2 border duration-150' alt="" />
+            {/* <AccountCircleIcon fontSize="large" className="text-3xl cursor-pointer" /> */}
             </Link>
           </div>
         </div>

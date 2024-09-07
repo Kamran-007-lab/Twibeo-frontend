@@ -215,10 +215,10 @@ const GetVideo = () => {
               fontSize="large"
               className="text-3xl cursor-pointer"
             />
-            <AccountCircleIcon
-              fontSize="large"
-              className="text-3xl cursor-pointer"
-            />
+            <Link to={`/Profile/${currentUser?._id}`} >
+            <img src={currentUser?.avatar} className='h-10 w-10 rounded-full cursor-pointer hover:scale-110 border-b-2 border duration-150' alt="" />
+            {/* <AccountCircleIcon fontSize="large" className="text-3xl cursor-pointer" /> */}
+            </Link>
           </div>
         </div>
         <div className="flex-1 flex">

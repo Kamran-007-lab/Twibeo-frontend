@@ -5,6 +5,7 @@ import viteLogo from "/vite.svg";
 import LandingPage from "../pages/LandingPage.jsx";
 import Navbar from "../components/Navbar.jsx";
 import CreateProfile from "../pages/CreateProfile.jsx";
+import UploadVideo from "../pages/UploadVideo.jsx";
 import Login from "../pages/Login.jsx";
 import Home from "../pages/Home.jsx";
 import GetVideo from "../pages/GetVideo.jsx";
@@ -47,6 +48,7 @@ function App() {
               {/* <Route exact path="/MyProfile" element={<MyProfile />} /> */}
               <Route exact path="/Profile/:userId" element={<Profile />} />
               <Route exact path="/WatchHistory" element={<WatchHistory />} />
+              <Route exact path="/UploadVideo" element={<UploadVideo />} />
             </Routes>
           </VideoContextProvider>
         </UserContextProvider>

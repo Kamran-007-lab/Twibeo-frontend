@@ -13,6 +13,8 @@ import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import HistoryIcon from "@mui/icons-material/History";
 import UserContext from "../context/UserContext";
 import LogoutIcon from "@mui/icons-material/Logout";
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import add from "../components/images/add.png"
 
 const Profile = () => {
   const { userId } = useParams();
@@ -82,6 +84,14 @@ const Profile = () => {
                 <p className="text-center pt-1 text-lg">{video.title}</p>
               </div>
             ))}
+            <Link to="/UploadVideo">
+            <div className=" mt-4 cursor-pointer hover:scale-110 duration-200">
+            <img className="h-36 w-36 text-white invert" src={add} alt="" />
+            <p className="text-white text-center p-2">Upload Video</p>
+            </div>
+            </Link>
+            
+            
           </div>
         );
       case "playlists":
@@ -191,10 +201,10 @@ const Profile = () => {
               fontSize="large"
               className="text-3xl cursor-pointer"
             />
-            <AccountCircleIcon
-              fontSize="large"
-              className="text-3xl cursor-pointer"
-            />
+            <Link to={`/Profile/${currentUser?._id}`} >
+            <img src={currentUser?.avatar} className='h-10 w-10 rounded-full cursor-pointer hover:scale-110 border-b-2 border duration-150' alt="" />
+            {/* <AccountCircleIcon fontSize="large" className="text-3xl cursor-pointer" /> */}
+            </Link>
           </div>
         </div>
 
