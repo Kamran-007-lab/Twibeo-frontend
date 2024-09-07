@@ -13,6 +13,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 const WatchHistoryPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [watchHistory, setWatchHistory]= useState([]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -22,19 +23,47 @@ const WatchHistoryPage = () => {
     getCurrentUser();
   }, []);
 
+  useEffect(() => {
+    const fetchWatchHistory = async () => {
+      const response = await fetch(
+        `http://localhost:8000/api/v1/users/history`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      const json = await response.json();
+      if (json.success) {
+        console.log(json);
+        setWatchHistory(json.data);
+        // setComment(json.data);
+      } else {
+        errormessage(json.error);
+      }
+    };
+    fetchWatchHistory();
+  },[])
+
+
+
+
+
+
   const renderWatchHistory = () => {
     return (
-      <div className="flex flex-wrap gap-4 justify-between">
-        {Array(6)
-          .fill("")
-          .map((_, index) => (
-            <div key={index} className="w-72 bg-gray-200 rounded-lg my-3">
-              <div className="h-36 bg-gray-400 rounded-t-lg">
-                <p className="text-center pt-12 text-lg">Watched Video {index + 1}</p>
-              </div>
+      <div className="flex flex-wrap gap-4 justify-center">
+        {watchHistory
+          .map((history) => (
+            <div key={history?._id} className="w-72 bg-gray-200 rounded-lg my-3 cursor-pointer hover:scale-110 duration-200">
+              <Link to={`/GetVideo/${history?._id}`}>
+              <img className="h-36 w-72 rounded-lg" src={history?.thumbnail} alt="" />
               <div className="p-2">
-                <p className="text-center text-sm text-black">Video Title {index + 1}</p>
+                <p className="text-center text-sm text-black">{history?.title}</p>
               </div>
+              </Link>
             </div>
           ))}
       </div>

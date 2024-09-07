@@ -34,7 +34,7 @@ const Home = () => {
   //   }
   // }, [currentUser]);
 
-  console.log(currentUser)
+  // console.log(currentUser)
   let navigate = useNavigate();
 
   function errormessage(message) {
