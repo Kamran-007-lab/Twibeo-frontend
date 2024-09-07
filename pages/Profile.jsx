@@ -13,12 +13,14 @@ import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import HistoryIcon from "@mui/icons-material/History";
 import UserContext from "../context/UserContext";
 import LogoutIcon from "@mui/icons-material/Logout";
-import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import add from "../components/images/add.png"
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import add from "../components/images/add.png";
 
 const Profile = () => {
   const { userId } = useParams();
   // console.log("This is user Id",userId);
+  const [hoveredVideoId, setHoveredVideoId] = useState(null);
   const [myVideos, setMyVideos] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("videos");
@@ -27,9 +29,55 @@ const Profile = () => {
     getCurrentUser();
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     getMyVideos(userId);
-  },[])
+  }, []);
+
+
+  const handleMouseEnter = (videoId) => {
+    setHoveredVideoId(videoId);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredVideoId(null);
+  };
+
+  const deleteVideo = async (videoId) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/videos/${videoId}`,
+      {
+        // mode: 'no-cors',
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+    if (!response.ok) {
+      // Handle error response
+      console.log(response);
+      const errorText = await response.text();
+      console.error("Error response:", errorText);
+      // errormessage("Failed to get my videos");
+      return;
+    }
+
+    const json = await response.json();
+    if (json.success) {
+      console.log("Deleted this video", json);
+      // navigate("/");
+      // setMyVideos(json.data);
+      getMyVideos(userId);
+      // console.log(currentUser)
+    } else {
+      console.log("errrrrrr");
+      // errormessage(json.error);
+    }
+  };
+
+
+
 
   const getMyVideos = async (userId) => {
     const response = await fetch(
@@ -75,23 +123,37 @@ const Profile = () => {
       case "videos":
         return (
           <div className="flex flex-wrap gap-4 justify-center">
-            {myVideos.map((video, index) => (
-              <div
-                key={index}
-                className=" bg-gray-200 rounded-lg m-3 cursor-pointer hover:scale-110 duration-200"
-              >
-                <img className="h-36 w-72 rounded-lg" src={video.thumbnail} alt="" />
-                <p className="text-center pt-1 text-lg">{video.title}</p>
-              </div>
-            ))}
-            <Link to="/UploadVideo">
-            <div className=" mt-4 cursor-pointer hover:scale-110 duration-200">
-            <img className="h-36 w-36 text-white invert" src={add} alt="" />
-            <p className="text-white text-center p-2">Upload Video</p>
+            {myVideos.map((video) => (
+            <div
+              key={video._id}
+              className="relative bg-gray-200 rounded-lg m-3 cursor-pointer hover:scale-110 duration-200"
+              onMouseEnter={() => handleMouseEnter(video._id)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <img
+                className="h-36 w-72 rounded-lg"
+                src={video.thumbnail}
+                alt={video.title}
+              />
+              <p className="text-center pt-1 text-lg">{video.title}</p>
+              {/* Show delete icon only on hovered video */}
+              {hoveredVideoId === video._id && (
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
+                  <div  onClick={() => deleteVideo(video._id)}
+                  className="flex justify-center text-center items-center space-x-2 cursor-pointer text-white">
+                    <DeleteIcon className="text-xl" />
+                    <span>Delete</span>
+                  </div>
+                </div>
+              )}
             </div>
+          ))}
+            <Link to="/UploadVideo">
+              <div className=" mt-4 cursor-pointer hover:scale-110 duration-200">
+                <img className="h-36 w-36 text-white invert" src={add} alt="" />
+                <p className="text-white text-center p-2">Upload Video</p>
+              </div>
             </Link>
-            
-            
           </div>
         );
       case "playlists":
@@ -201,9 +263,13 @@ const Profile = () => {
               fontSize="large"
               className="text-3xl cursor-pointer"
             />
-            <Link to={`/Profile/${currentUser?._id}`} >
-            <img src={currentUser?.avatar} className='h-10 w-10 rounded-full cursor-pointer hover:scale-110 border-b-2 border duration-150' alt="" />
-            {/* <AccountCircleIcon fontSize="large" className="text-3xl cursor-pointer" /> */}
+            <Link to={`/Profile/${currentUser?._id}`}>
+              <img
+                src={currentUser?.avatar}
+                className="h-10 w-10 rounded-full cursor-pointer hover:scale-110 border-b-2 border duration-150"
+                alt=""
+              />
+              {/* <AccountCircleIcon fontSize="large" className="text-3xl cursor-pointer" /> */}
             </Link>
           </div>
         </div>

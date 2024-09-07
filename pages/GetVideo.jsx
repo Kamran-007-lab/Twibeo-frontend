@@ -27,8 +27,13 @@ const GetVideo = () => {
 
   useEffect(() => {
     getVideo();
+  }, []);
+
+  useEffect(() => {
     getCurrentUser();
   }, []);
+
+
 
   useEffect(() => {
     async function fetchData() {
@@ -164,7 +169,7 @@ const GetVideo = () => {
             </Link>
           </li>
           <li className="cursor-pointer p-2 hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white rounded-lg">
-            <Link to={`/MySubscriptions/${currentUser._id}`} className="flex items-center space-x-2">
+            <Link to={`/MySubscriptions/${currentUser?._id}`} className="flex items-center space-x-2">
               <SubscriptionsIcon className="text-xl" />
               <span>Subscriptions</span>
             </Link>
@@ -235,8 +240,9 @@ const GetVideo = () => {
 
             {/* Video Info */}
             <div className="mt-4 text-white">
-              <h2 className="text-3xl font-bold">Video Title</h2>
-              <p className="text-sm text-white">1M views • 1 week ago</p>
+              <h2 className="text-3xl font-bold">{playVideo.title}</h2>
+              <p className="text-sm text-white">{playVideo.views} views • {timeAgo(playVideo.createdAt)}</p>
+              <p className="text-lg mt-2 text-white">{playVideo.description}</p>
               <div  className="flex items-center space-x-4 mt-2">
                 <button className="hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white bg-white text-black font-bold py-2 px-4 rounded-lg">
                   Like
@@ -335,7 +341,7 @@ const GetVideo = () => {
                   <h4 className="text-white font-bold">{video.title}</h4>
                   <p className="text-sm text-white">{video.owner.username}</p>
                   <p className="text-sm text-white">
-                    {video.views} views • 2 days ago
+                    {video.views} views • {timeAgo(video.createdAt)}
                   </p>
                 </div>
               </div>

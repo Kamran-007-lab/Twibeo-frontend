@@ -16,6 +16,8 @@ const UploadVideo = () => {
   let navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { handleLogout, getCurrentUser, currentUser } = useContext(UserContext);
+  // const [uploadProgress, setUploadProgress] = useState(0);
+  // const [uploading, setUploading] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -23,28 +25,9 @@ const UploadVideo = () => {
   useEffect(() => {
     getCurrentUser();
   }, []);
-  const renderWatchHistory = () => {
-    return (
-      <div className="flex flex-wrap gap-4 justify-between">
-        {Array(6)
-          .fill("")
-          .map((_, index) => (
-            <div key={index} className="w-72 bg-gray-200 rounded-lg my-3">
-              <div className="h-36 bg-gray-400 rounded-t-lg">
-                <p className="text-center pt-12 text-lg">
-                  Playlist {index + 1}
-                </p>
-              </div>
-              <div className="p-2">
-                <p className="text-center text-sm text-black">
-                  Playlist Title {index + 1}
-                </p>
-              </div>
-            </div>
-          ))}
-      </div>
-    );
-  };
+
+  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,8 +53,8 @@ const UploadVideo = () => {
 
       navigate("/Home");
     } else {
-      errormessage(json.error);
-      // console.log(json.error);
+      // errormessage(json.error);
+      console.log(json.error);
     }
   };
 
@@ -148,9 +131,13 @@ const UploadVideo = () => {
               fontSize="large"
               className="text-3xl cursor-pointer"
             />
-           <Link to={`/Profile/${currentUser?._id}`} >
-            <img src={currentUser?.avatar} className='h-10 w-10 rounded-full cursor-pointer hover:scale-110 border-b-2 border duration-150' alt="" />
-            {/* <AccountCircleIcon fontSize="large" className="text-3xl cursor-pointer" /> */}
+            <Link to={`/Profile/${currentUser?._id}`}>
+              <img
+                src={currentUser?.avatar}
+                className="h-10 w-10 rounded-full cursor-pointer hover:scale-110 border-b-2 border duration-150"
+                alt=""
+              />
+              {/* <AccountCircleIcon fontSize="large" className="text-3xl cursor-pointer" /> */}
             </Link>
           </div>
         </div>
@@ -233,7 +220,6 @@ const UploadVideo = () => {
                   type="file"
                 />
               </div>
-
               <button className="mt-6 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-emerald-100 to-black group-hover:from-emerald-100 group-hover:to-black hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-emerald-300 dark:focus:ring-green-800">
                 <span className="relative w-full px-5 py-2.5 transition-all ease-in duration-75 bg-white  dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 text-xl">
                   Upload
