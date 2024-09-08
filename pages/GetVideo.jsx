@@ -20,7 +20,7 @@ const GetVideo = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [comment, setComment] = useState([]);
   const [currentComment, setCurrentComment] = useState("");
-  const { video, playVideo, handleVideo, vid, setVid, getVideo } =
+  const { video, playVideo, handleVideo, vid, setVid, getVideo,handleSearch, searchQuery,setSearchQuery } =
     useContext(VideoContext);
   const { handleLogout, timeAgo, errormessage,subscribeStatus,toggleSubscription,currentUser,getCurrentUser } = useContext(UserContext);
   const [counter, setCounter] = useState(0);
@@ -201,13 +201,22 @@ const GetVideo = () => {
             />
             <h1 className="text-6xl mt-1 pt-2 font-signature">Twibeo</h1>
           </div>
-          <div className="flex items-center space-x-4">
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-96 bg-gray-100 p-2 rounded-full focus:outline-none text-black"
-            />
-            <SearchIcon fontSize="large" className="cursor-pointer" />
+          <div >
+            <form
+              onSubmit={handleSearch}
+              className="flex items-center space-x-4"
+            >
+              <input
+                type="text"
+                placeholder="Search"
+                className="w-96 bg-gray-100 p-2 rounded-full focus:outline-none text-black"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)} // Update the searchQuery state on input change
+              />
+              <button type="submit">
+                <SearchIcon fontSize="large" className="cursor-pointer" />
+              </button>
+            </form>
           </div>
           <div className="flex items-center space-x-4 mr-4">
             <NotificationsIcon
