@@ -117,14 +117,8 @@ const GetVideo = () => {
     const json = await response.json();
     if (json.success) {
       setCounter(counter - 1);
-      // console.log(json);
-      // navigate("/GetVideo");
-      // setVideo(json.data.videos);
-      // console.log(video);
     } else {
       alert("You can only delete your own posted comments");
-      // console.log("errrrroooor");
-      // errormessage(json.error);
     }
   };
 

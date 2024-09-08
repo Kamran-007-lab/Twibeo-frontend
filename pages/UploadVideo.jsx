@@ -10,51 +10,45 @@ import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import UserContext from "../context/UserContext";
 import LogoutIcon from "@mui/icons-material/Logout";
-// import { FontAwesomeIcon } from "@fontawesome/react-fontawesome";
+import CircularProgress from "@mui/material/CircularProgress"; // Material UI spinner
 
 const UploadVideo = () => {
   let navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false); // Track uploading state
   const { handleLogout, getCurrentUser, currentUser } = useContext(UserContext);
-  // const [uploadProgress, setUploadProgress] = useState(0);
-  // const [uploading, setUploading] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
   useEffect(() => {
     getCurrentUser();
   }, []);
 
-  
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsUploading(true); // Start spinner
 
-    // Create FormData object using the form data after the form has been submitted
     const form = document.getElementById("form");
     const data = new FormData(form);
-    const response = await fetch(
-      "http://localhost:8000/api/v1/videos/",
-      {
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/videos/", {
         method: "POST",
-        // headers: {
-        //   "Content-Type": "multipart/form-data",
-        // },
         body: data,
         credentials: "include",
+      });
+
+      const json = await response.json();
+      if (json.success) {
+        navigate("/Home");
+      } else {
+        console.log(json.error);
       }
-    );
-
-    const json = await response.json();
-    if (json.success) {
-      //Redirect to My Profile page
-
-      navigate("/Home");
-    } else {
-      // errormessage(json.error);
-      console.log(json.error);
+    } catch (error) {
+      console.error("Upload failed", error);
+    } finally {
+      setIsUploading(false); // Stop spinner after upload
     }
   };
 
@@ -75,7 +69,7 @@ const UploadVideo = () => {
           </li>
           <li className="cursor-pointer p-2 hover:bg-gradient-to-br from-emerald-100 to-black hover:text-white rounded-lg">
             <Link
-              to={`/MySubscriptions/${currentUser._id}`}
+              to={`/MySubscriptions/${currentUser?._id}`}
               className="flex items-center space-x-2"
             >
               <SubscriptionsIcon className="text-xl" />
@@ -109,7 +103,7 @@ const UploadVideo = () => {
       {/* Main Content */}
       <div className="flex-1">
         {/* Header */}
-        <div className="top-0 z-10  p-2 flex items-center justify-between text-white">
+        <div className="top-0 z-10 p-2 flex items-center justify-between text-white">
           <div className="flex items-center space-x-4 ml-3">
             <MenuIcon
               fontSize="large"
@@ -137,95 +131,100 @@ const UploadVideo = () => {
                 className="h-10 w-10 rounded-full cursor-pointer hover:scale-110 border-b-2 border duration-150"
                 alt=""
               />
-              {/* <AccountCircleIcon fontSize="large" className="text-3xl cursor-pointer" /> */}
             </Link>
           </div>
         </div>
 
         {/* Upload Video Section */}
         <div className="px-6 mt-8 flex justify-center items-center">
-          <div className="p-5  mb-8 border-dashed border-2 border-black rounded-3xl flex justify-center items-center h-5/6 w-9/12">
-            <form
-              id="form"
-              encType="multipart/form-data"
-              onSubmit={handleSubmit}
-              className="w-3/6 flex flex-col  "
-            >
-              <div className="text-5xl font-semibold tex justify-center items-center align-middle mt-4 mb-6 mx-auto  text-white font-fornavbar">
-                Video Details
+          <div className="p-5 mb-8 border-dashed border-2 border-black rounded-3xl flex justify-center items-center h-5/6 w-9/12">
+            {isUploading ? (
+              <div className="flex flex-col items-center justify-center">
+                <CircularProgress color="inherit" />
+                <p className="text-white mt-4">Uploading video, please wait...</p>
               </div>
+            ) : (
+              <form
+                id="form"
+                encType="multipart/form-data"
+                onSubmit={handleSubmit}
+                className="w-3/6 flex flex-col"
+              >
+                <div className="text-5xl font-semibold justify-center items-center align-middle mt-4 mb-6 mx-auto text-white font-fornavbar">
+                  Video Details
+                </div>
 
-              <div className="mb-6 ">
-                <label
-                  htmlFor="title"
-                  className="mb-2 text-lg font-medium text-white dark:text-white"
-                >
-                  Video Title
-                </label>
-                <input
-                  className="bg-gray-50  text-gray-900 text-sm rounded-lg w-full p-2.5 border focus:ring-red-500 focus:border-red-500"
-                  type="title"
-                  id="title"
-                  name="title"
-                  placeholder="Enter video title"
-                  required
-                />
-              </div>
+                <div className="mb-6">
+                  <label
+                    htmlFor="title"
+                    className="mb-2 text-lg font-medium text-white"
+                  >
+                    Video Title
+                  </label>
+                  <input
+                    className="bg-gray-50 text-gray-900 text-sm rounded-lg w-full p-2.5 border focus:ring-red-500 focus:border-red-500"
+                    type="title"
+                    id="title"
+                    name="title"
+                    placeholder="Enter video title"
+                    required
+                  />
+                </div>
 
-              <div className="mb-6 w-full mr-2">
-                <label
-                  htmlFor="description"
-                  className="mb-2 text-lg font-medium text-white dark:text-white"
-                >
-                  Description
-                </label>
-                <input
-                  type="description"
-                  id="description"
-                  name="description"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Enter video description"
-                  required
-                />
-              </div>
-              <div className="w-full mb-6">
-                <label
-                  className="block mb-2 text-lg font-medium text-white dark:text-white"
-                  htmlFor="thumbnail"
-                >
-                  Thumbnail
-                </label>
+                <div className="mb-6 w-full mr-2">
+                  <label
+                    htmlFor="description"
+                    className="mb-2 text-lg font-medium text-white"
+                  >
+                    Description
+                  </label>
+                  <input
+                    type="description"
+                    id="description"
+                    name="description"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5"
+                    placeholder="Enter video description"
+                    required
+                  />
+                </div>
 
-                <input
-                  className="block w-full py-2 px-1 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 h-full"
-                  aria-describedby="user_avatar_help"
-                  id="thumbnail"
-                  name="thumbnail"
-                  type="file"
-                />
-                {/* <br /> */}
-                {/* <br /> */}
-                <label
-                  className="block mb-2 mt-6 text-lg font-medium text-white dark:text-white"
-                  htmlFor="videoFile"
-                >
-                  Video File
-                </label>
+                <div className="w-full mb-6">
+                  <label
+                    className="block mb-2 text-lg font-medium text-white"
+                    htmlFor="thumbnail"
+                  >
+                    Thumbnail
+                  </label>
 
-                <input
-                  className="block w-full py-2 px-1 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 h-full"
-                  aria-describedby="user_avatar_help"
-                  id="videoFile"
-                  name="videoFile"
-                  type="file"
-                />
-              </div>
-              <button className="mt-6 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-emerald-100 to-black group-hover:from-emerald-100 group-hover:to-black hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-emerald-300 dark:focus:ring-green-800">
-                <span className="relative w-full px-5 py-2.5 transition-all ease-in duration-75 bg-white  dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 text-xl">
-                  Upload
-                </span>
-              </button>
-            </form>
+                  <input
+                    className="block w-full py-2 px-1 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                    id="thumbnail"
+                    name="thumbnail"
+                    type="file"
+                  />
+
+                  <label
+                    className="block mb-2 mt-6 text-lg font-medium text-white"
+                    htmlFor="videoFile"
+                  >
+                    Video File
+                  </label>
+
+                  <input
+                    className="block w-full py-2 px-1 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                    id="videoFile"
+                    name="videoFile"
+                    type="file"
+                  />
+                </div>
+
+                <button className="mt-6 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-emerald-100 to-black group-hover:from-emerald-100 group-hover:to-black hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-emerald-300 dark:focus:ring-green-800">
+                  <span className="relative w-full px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 text-xl">
+                    Upload
+                  </span>
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ const UserContextProvider = ({ children }) => {
     const[currentUser,setCurrentUser]=useState();
     const[subscribers,setSubscribers]=useState([]);
     const[subscriptions,setSubscriptions]=useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
     
     function errormessage(message) {
         let dropdown = document.getElementById("errormessage");
